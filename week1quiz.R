@@ -21,11 +21,11 @@ download.packages("xlsx", getwd())
 install.packages("xlsx")
 library(xlsx)
 
-data_xls = read.xlsx("./data/ngap.xlsx", sheetIndex = 1)
 rows <- 18:23
 cols <- 7:15
+data_xls = read.xlsx("./data/ngap.xlsx", sheetIndex = 1, rowIndex = rows, colIndex = cols, header = TRUE)
 
-dat <- data_xls [rows,cols]
+dat <- data_xls
 sum(dat$Zip*dat$Ext,na.rm=T)
 
 # Question 4
