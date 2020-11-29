@@ -10,7 +10,7 @@ dateDownloaded <- date()
 data <- read.csv("./data/2006survey.csv")
 sum(data$VAL == 24, na.rm = TRUE)
 
-# Question 2
+# Question 3
 fileXLS = "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx"
 # NB! It is important to include mode = 'wb' when downloading xlsx files. Otherwise R won't be able to read the file
 download.file(fileXLS, destfile = "./data/ngap.xlsx", mode = 'wb')
