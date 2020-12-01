@@ -1,5 +1,6 @@
 # Helpful resource used during this assignment 
 # https://thoughtfulbloke.wordpress.com/2015/09/09/getting-and-cleaning-week-2/
+# https://github.com/r-lib/httr/blob/master/demo/oauth2-github.r
 
 # Required libraries
 library(httr)
