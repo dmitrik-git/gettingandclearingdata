@@ -50,6 +50,7 @@ download.file(fileURL2, destfile = "./data/Country.csv")
 dateDownloaded <- date()
 
 gdps <- read.csv("./data/GDP.csv", blank.lines.skip = TRUE, skip = 4, na.strings = "", skipNul = TRUE)
+# str(gdps) gives someuseful info about columns
 gdps_clean <- data.frame ("CountryCode" = gdps$X, "Rank" = as.integer(gdps$X.1), "Country" = gdps$X.3, "GDP" = as.numeric(gdps$X.4))
 gdps_clean <- gdps_clean[rowSums(is.na(gdps_clean)) != ncol(gdps_clean), ]
 # remove rows with all NAs
@@ -60,6 +61,14 @@ countries <- read.csv("./data/Country.csv")
 install.packages("plyr")
 library(plyr)
 arrangedData <- arrange(join(gdps_clean, countries), desc(Rank))
+
+# Question 4
+# What is the average GDP ranking for the "High income: OECD" and "High income: nonOECD" group?
+
+install.packages("reshape2")
+library(reshape2)
+meltedData <- melt (arrangedData, id = "Income.Group", measure.vars = "Rank")
+dcast(meltedData, Income.Group ~ variable, mean)
 
 
 
