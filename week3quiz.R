@@ -48,10 +48,18 @@ fileURL2 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Coun
 download.file(fileURL1, destfile = "./data/GDP.csv", mode = "wb")
 download.file(fileURL2, destfile = "./data/Country.csv")
 dateDownloaded <- date()
-gdps <- read.csv("./data/GDP.csv", blank.lines.skip = TRUE, skip = 4)
+
+gdps <- read.csv("./data/GDP.csv", blank.lines.skip = TRUE, skip = 4, na.strings = "", skipNul = TRUE)
+gdps_clean <- data.frame ("CountryCode" = gdps$X, "Rank" = as.integer(gdps$X.1), "Country" = gdps$X.3, "GDP" = as.numeric(gdps$X.4))
+gdps_clean <- gdps_clean[rowSums(is.na(gdps_clean)) != ncol(gdps_clean), ]
+# remove rows with all NAs
+gdps_clean <- gdps_clean[!is.na(gdps_clean$Rank),]
+
 countries <- read.csv("./data/Country.csv")
-mergedData <- merge (gdps, countries, by.x = "X", by.y = "CountryCode", all=TRUE)
-mergedData <- mergedData[order(mergedData$X.1, decreasing = TRUE),]
+
+install.packages("plyr")
+library(plyr)
+arrangedData <- arrange(join(gdps_clean, countries), desc(Rank))
 
 
 
