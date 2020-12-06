@@ -61,6 +61,7 @@ countries <- read.csv("./data/Country.csv")
 install.packages("plyr")
 library(plyr)
 arrangedData <- arrange(join(gdps_clean, countries), desc(Rank))
+head(arrangedData, n = 14)
 
 # Question 4
 # What is the average GDP ranking for the "High income: OECD" and "High income: nonOECD" group?
