@@ -1,9 +1,10 @@
-# On data cleaning https://ridango.atlassian.net/browse/SUP-16102
+# On data cleaning 
+http://vita.had.co.nz/papers/tidy-data.pdf
 
 # Missing values, NAs
 
 ## which() function doesn't include NA's. For example,
-X[which(X$var2 > 8),] # will return rows where var2 islarger than 8 and NAs will be excluded.
+X[which(X$var2 > 8),] # will return rows where var2 is larger than 8 and NAs will be excluded.
 
 sum(is.na(df$var1)) # as TRUE counts as 1, if sum is > 0 then there are missing values
 any(is.na(df$var1)) # if there is at least 1 NA then it will return TRUE
