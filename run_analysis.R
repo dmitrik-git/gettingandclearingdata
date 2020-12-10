@@ -60,7 +60,7 @@ mean_std_data <- cbind(mean_data, std_data, activity_data, subject_data)
 
 library(reshape2)
 dfMelt <- melt(mean_std_data, id=c("activity", "subject"), measure.vars = c(1:length(means)+length(stds)))
-dfCast <- dcast(dfMelt, activity_data + subject_data ~ variable, mean)
+mean_summary <- dcast(dfMelt, activity_data + subject_data ~ variable, mean)
 
 
 
