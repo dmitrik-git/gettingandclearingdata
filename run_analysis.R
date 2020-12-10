@@ -1,4 +1,4 @@
-# Load data from the source files
+# Load original data from the source files
 test_data <- read.table("./data/UCI HAR Dataset/test/X_test.txt")
 test_labels <- read.table("./data/UCI HAR Dataset/test/y_test.txt")
 train_data <- read.table("./data/UCI HAR Dataset/train/X_train.txt")
@@ -15,10 +15,6 @@ library(plyr)
 test_labels <- merge (test_labels, activities, by.x="V1", by.y="V1")
 train_labels <- merge (train_labels, activities, by.x="V1", by.y="V1")
 
-for (i in 1:nrow(activities)){
-test_labels <- gsub(i, activities[i, 2], test_labels)
-train_labels <- gsub(i, activities[i, 2], train_labels)
-}
 
 # 1. Merge the training and the test sets to into one data set
 # 1.1 Merge activities
@@ -26,21 +22,22 @@ train_labels <- gsub(i, activities[i, 2], train_labels)
   train_data <- cbind(train_data, train_labels)  
 
 # 1.2 Merge subjects
-  test_data <- cbind(test_data, test_subjects)  # NB! need to fix the name of the last column
-  train_data <- cbind(train_data, train_subjects) # NB! need to fix the name of the last column 
-# 1.3 Rename two last columns
-  names(test_data)[562] <- "activities"
-  names(train_data)[562] <- "activities"
-  names(test_data)[563] <- "subjects"
-  names(train_data)[563] <- "subjects"
+  test_data <- cbind(test_data, test_subjects)
+  train_data <- cbind(train_data, train_subjects)
+
+  # 1.3 Rename two last columns. This is needed to avoid variable name conflict when doing rbind later
+  names(test_data)[563] <- "activity"
+  names(train_data)[563] <- "activity"
+  names(test_data)[564] <- "subject"
+  names(train_data)[564] <- "subject"
   
 all_data <- rbind (test_data, train_data)
 
 # 4. Appropriately label the data set with descriptive variable names.
 
   columns <- as.character(features$V2)
-  columns <- c(columns, "activity", "subject") # not to forget the activity variable
-  colnames(all_data) <- columns
+  columns <- c(columns, "activity.id", "activity", "subject") # all feature variables plus newly merged
+  colnames(all_data) <- columns # rename the columns
 
 # 2. Extract only the measurements on the mean and standard deviation for each measurement
 
@@ -53,12 +50,16 @@ activity_data <- all_data[,"activity"]
 subject_data <- all_data[,"subject"]
 mean_std_data <- cbind(mean_data, std_data, activity_data, subject_data)
 
-print (head(mean_std_data, n = 2))
+# 2.1 Rename the activity and subject columns
+  library(plyr)
+  mean_std_data <- rename(mean_std_data, c("activity_data" = "activity", "subject_data" = "subject"))
+  
 
 # 5. From the data set in step 4, creates a second, independent tidy data set 
 # with the average of each variable for each activity and each subject.
 
-dfMelt <- melt(mean_std_data, id=c("activity_data", "subject_data"), measure.vars = c(1:79))
+library(reshape2)
+dfMelt <- melt(mean_std_data, id=c("activity", "subject"), measure.vars = c(1:length(means)+length(stds)))
 dfCast <- dcast(dfMelt, activity_data + subject_data ~ variable, mean)
 
 
